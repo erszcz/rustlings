@@ -5,7 +5,16 @@
 
 // Write a macro that passes the quiz! No hints this time, you can do it!
 
-// I AM NOT DONE
+macro_rules! my_macro {
+    ($val:expr) => {
+        {
+            let mut s = String::new();
+            s.push_str("Hello ");
+            s.push_str($val);
+            s
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {

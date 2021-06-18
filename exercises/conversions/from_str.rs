@@ -2,7 +2,6 @@
 // Additionally, upon implementing FromStr, you can use the `parse` method
 // on strings to generate an object of the implementor type.
 // You can read more about it at https://doc.rust-lang.org/std/str/trait.FromStr.html
-use std::error;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -10,8 +9,6 @@ struct Person {
     name: String,
     age: usize,
 }
-
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -24,8 +21,22 @@ struct Person {
 // If everything goes well, then return a Result of a Person object
 
 impl FromStr for Person {
-    type Err = Box<dyn error::Error>;
+    type Err = &'static str;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.len() == 0 {
+            return Err("length is 0")
+        }
+        let parts: Vec<&str> = s.split(',').collect();
+        if parts.len() != 2 {
+            return Err("expected exactly two parts, on before and one after comma")
+        }
+        if parts[0].len() == 0 || parts[1].len() == 0 {
+            return Err("neither name nor age can be empty")
+        }
+        Ok(Person {
+            name: parts[0].to_string(),
+            age: parts[1].parse().map_err(|_| "cannot parse age")?
+        })
     }
 }
 
